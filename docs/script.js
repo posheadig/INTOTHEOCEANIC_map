@@ -29,10 +29,30 @@ const colorRange = [
     getPosition: d => [d.lng, d.lat],
     radius: 1000
   });
+  const TX = new deck.TileLayer({
+    data: 'docs/tiles/intotheoceanic/{z}/{x}/{y}',
+    minZoom: 0,
+    maxZoom: 6,
+    tileSize: 256,
+  
+    renderSubLayers: props => {
+      const {
+        bbox: { west, south, east, north }
+      } = props.tile;
+  
+      return  new deck.BitmapLayer(props, {
+          data: null,
+          image: props.data,
+          bounds: [west, south, east, north]
+      });
+      }
+    });
+
+
 
 //Create an overlay on Google Maps with the layer
   const overlay = new deck.GoogleMapsOverlay({
-    layers: [hexagonLayer]
+    layers: [hexagonLayer, TX]
   });
   //add that overlay to the Google Map
   overlay.setMap(map);
